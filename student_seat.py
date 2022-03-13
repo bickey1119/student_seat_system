@@ -27,8 +27,8 @@ class Application(tkinter.Frame): #tkinterのフレームを継承
         self.text_box=tkinter.Entry(self, justify='center', width = 10, font = b)
         self.text_box.pack()
 
-        submit_btn=tkinter.Button(self, justify='center', width = 3, font = a)
-        submit_btn['text']='実行'
+        submit_btn=tkinter.Button(self, justify='center', width = 10, font = a)
+        submit_btn['text']='座席番号表示'
         submit_btn['command']=self.save_data
         submit_btn.pack()
 
@@ -39,19 +39,22 @@ class Application(tkinter.Frame): #tkinterのフレームを継承
     
     def save_data(self):
         global retsu_number #関数内外でもアクセス可
+        student_number_list = []
         text=self.text_box.get()
         student_number = int(text) #VLOOKUPを使いたいから数値に変換
+        student_number_list.append(student_number) #excelに吐き出すように格納
         file_path = 'aaa.xlsx'
-        wb=openpyxl.load_workbook(file_path,data_only=True)
+        wb=openpyxl.load_workbook(file_path,data_only=False) #Falseは書き込み可能
         ws = wb['Sheet1'] #将来的にはシステム起動後にシートの自動生成、自動指定がしたい
         #ws=wb.worksheets[0] これよくわからんけど上の方がシート指定できて良さげ
         seat_number = ws['D'+str(retsu_number)] #座席番号取得
         ws['B'+str(retsu_number)].value=student_number #B列に生徒番号を入力
         wb.save(file_path) #上書き保存
         student_name = ws['C'+str(retsu_number)]
-        #self.message['text']=student_name.value+'さんの席番号は '+str(seat_number.value)+' です。' #生徒氏名がVLOOKUPの式になってまう…属性valueでセルの値を取得、あとメッセージ幅広げたい
+        #self.message['text']=student_name.value+'さんの席番号は '+str(seat_number.value)+' です。' #生徒氏名がVLOOKUPの式になってまう…属性valueでセルの値を取得
         self.message['text']='生徒番号'+text+'の席番号は\n ' +str(seat_number.value)+'番です。'
         self.text_box.delete(0, tkinter.END) #テキストボックス内を消す
+        print(*student_number_list)
         retsu_number = retsu_number + 1 #列番号を下にずらし、入力値をずらす
         
     
@@ -60,7 +63,7 @@ class Application(tkinter.Frame): #tkinterのフレームを継承
 
 
 root=tkinter.Tk()  #オブジェクト作成
-root.title('座席管理表')
+root.title('過去問演習会座席管理表')
 root.geometry('800x400')
 retsu_number = 3
 a = ("Arial black", 15, "bold")
