@@ -41,7 +41,8 @@ class Application(tkinter.Frame): #tkinterのフレームを継承
         global retsu_number #関数内外でもアクセス可
         student_number_list = []
         text=self.text_box.get()
-        student_number = int(text) #VLOOKUPを使いたいから数値に変換
+        text2 = text[1:9] #アスタリスクを抜く
+        student_number = int(text2) #VLOOKUPを使いたいから数値に変換
         student_number_list.append(student_number) #excelに吐き出すように格納
         file_path = 'aaa.xlsx'
         wb=openpyxl.load_workbook(file_path,data_only=False) #Falseは書き込み可能
@@ -52,9 +53,10 @@ class Application(tkinter.Frame): #tkinterのフレームを継承
         wb.save(file_path) #上書き保存
         student_name = ws['C'+str(retsu_number)]
         #self.message['text']=student_name.value+'さんの席番号は '+str(seat_number.value)+' です。' #生徒氏名がVLOOKUPの式になってまう…属性valueでセルの値を取得
-        self.message['text']='生徒番号'+text+'の席番号は\n ' +str(seat_number.value)+'番です。'
+        self.message['text']='生徒番号'+text2+'の席番号は\n ' +str(seat_number.value)+'番です。'
         self.text_box.delete(0, tkinter.END) #テキストボックス内を消す
         print(*student_number_list)
+        print(text2)
         retsu_number = retsu_number + 1 #列番号を下にずらし、入力値をずらす
         
     
